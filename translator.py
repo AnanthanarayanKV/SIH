@@ -2,6 +2,7 @@
 import torch
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 from IndicTransToolkit.processor import IndicProcessor
+import unicodedata
 
 MODEL_NAME = "ai4bharat/indictrans2-indic-indic-dist-320M"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -14,6 +15,7 @@ class Translator:
         self.ip = IndicProcessor(inference=True)
 
     def translate(self, sentences: list[str], src_lang="hin_Deva", tgt_lang="sat_Olck") -> list[str]:
+        sentences = [unicodedata.normalize("NFC", s) for s in sentences]
         batch = self.ip.preprocess_batch(sentences, src_lang=src_lang, tgt_lang=tgt_lang)
         inputs = self.tokenizer(batch, truncation=True, padding="longest", return_tensors="pt", max_length=256).to(DEVICE)
 

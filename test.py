@@ -1,18 +1,30 @@
 # ground_truth_check.py
 from translator import translator
 
-# (Hindi input, expected Santali gloss/rough check, source)
+def is_valid_olchiki(text: str) -> bool:
+    for ch in text:
+        cp = ord(ch)
+        if ch.isspace() or ch in "।.":
+            continue
+        if not (0x1C50 <= cp <= 0x1C7F):
+            return False
+    return True
+
 test_pairs = [
-    ("नमस्कार", "Johar (ᱡᱚᱦᱟᱨ)"),
-    ("पानी", None),      # water
-    ("एक", None),         # one
-    ("दो", None),         # two
-    ("बच्चा", None),      # child
-    ("विद्यालय", None),   # school
-    ("माँ", None),        # mother
-    ("धन्यवाद", None),    # thank you
+    ("सुबह", None),
+    ("रात", None),
+    ("खाना", None),
+    ("अलविदा", None),
+    ("स्कूल", None),
+    ("पढ़ाई", None),
+    ("विद्यालय", None),
+    ("किताब", None),
+    ("बाड़ा", None),
 ]
 
 for hindi, expected in test_pairs:
-    output = translator.translate([hindi])[0]
-    print(f"{hindi:12} -> {output}   (expected: {expected})")
+    output = translator.translate([hindi])[0]          # index [0] — unwrap the list
+    if not is_valid_olchiki(output):
+        output = "[Translation uncertain — please verify manually]"
+
+    print(f"Hindi: {hindi} | Santali (Ol Chiki): {output}")   # inside the loop
