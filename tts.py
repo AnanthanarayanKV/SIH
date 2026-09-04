@@ -17,7 +17,16 @@ if not hasattr(_pw, "isin_mps_friendly"):
 # -----------------------------------------------------------------------------
 
 from parler_tts import ParlerTTSForConditionalGeneration
+from parler_tts.configuration_parler_tts import ParlerTTSConfig
 from transformers import AutoTokenizer
+
+# --- transformers 4.5x compatibility shim ------------------------------------
+# transformers >=4.45 changed PretrainedConfig serialization: `to_diff_dict`
+# instantiates `self.__class__().to_dict()`. parler-tts 0.2.2's ParlerTTSConfig
+# can't be instantiated without sub-configs, which crashes on config load.
+# Newer parler-tts marks the class as having no defaults at init to skip that path.
+ParlerTTSConfig.has_no_defaults_at_init = True
+# -----------------------------------------------------------------------------
 
 MODEL_NAME = "ai4bharat/indic-parler-tts"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
