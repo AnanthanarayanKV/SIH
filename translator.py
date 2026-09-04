@@ -15,12 +15,12 @@ class Translator:
         self.ip = IndicProcessor(inference=True)
 
     def translate(self, sentences: list[str], src_lang="hin_Deva", tgt_lang="sat_Olck") -> list[str]:
-<<<<<<< HEAD
+#<<<<<<< HEAD
         sentences = [unicodedata.normalize("NFC", s) for s in sentences]
-=======
+#=======
         if not sentences:
             return []
->>>>>>> 1260d19 (Added TTS functionality)
+#>>>>>>> 1260d19 (Added TTS functionality)
         batch = self.ip.preprocess_batch(sentences, src_lang=src_lang, tgt_lang=tgt_lang)
         inputs = self.tokenizer(batch, truncation=True, padding="longest", return_tensors="pt", max_length=256).to(DEVICE)
 
